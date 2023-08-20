@@ -1,8 +1,13 @@
 const express = require("express");
 const { createFile, createFolder } = require("./utils");
 const postsData = require("./data/post.json");
+const fs = require("fs");
 
 const app = express();
+
+//pass incoming data---middleware----
+app.use(express.json());
+
 //create folder
 createFolder("data");
 //create File
@@ -21,13 +26,41 @@ app.get("/posts", (req, res) => {
     postsData,
   });
 });
+
 //fetch single post
 app.get("/posts/:id", (req, res) => {
-  res.send("Fetch Single Post Route!");
+  //get the id of post from url
+  const id = req.params.id;
+
+  //find post using id
+  const postFound = postsData.find((post) => {
+    return post.id === id;
+  });
+  //if post not found
+  if (!postFound) {
+    res.json({
+      message: "Check Id Again No Matching post for corresponding Id",
+    });
+  }
+  res.json(postFound);
 });
+
 //create a post
 app.post("/posts", (req, res) => {
-  res.send("Create Posts Route");
+  //get the post from user
+  const newPost = req.body;
+  // push the new post into existing post
+  postsData.unshift({ ...newPost, id: postsData.length.toString() });
+  console.log(postsData);
+
+  //write to a file
+  fs.writeFile("data/post.json", JSON.stringify(postsData), (err) => {
+    if (err) {
+      console.log(err);
+    }
+    //send message to the user
+    res.json({ message: "Post created Successfully" });
+  });
 });
 
 //update a post
@@ -39,7 +72,18 @@ app.put("/posts/:id", (req, res) => {
 //Delete a Post
 app.delete("/posts/:id", (req, res) => {
   console.log(req.params);
-  res.send("Delete Post Route");
+  const id = req.params.id;
+  const filteredPosts = postsData.filter(function (post) {
+    return post.id !== id;
+  });
+  //write to a file
+  fs.writeFile("data/post.json", JSON.stringify(filteredPosts), (err) => {
+    if (err) {
+      console.log(err);
+    }
+    //send message to the user
+    res.json({ message: "Post Deleted Successfully" });
+  });
 });
 const port = 9000;
 app.listen(port, () => {
