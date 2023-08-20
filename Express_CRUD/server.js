@@ -87,7 +87,7 @@ app.put("/posts/:id", (req, res) => {
   foundPost.url = url;
 
   //push the updated post into the filtered post array
-  filteredPosts.unshift(foundPost);
+  filteredPosts.unshift(foundPost); //unshift for order of latest post first
 
   //write to the file
 
