@@ -1,9 +1,14 @@
 const express = require("express");
+const { createFile, createFolder } = require("./utils");
+const postsData = require("./data/post.json");
 
 const app = express();
+//create folder
+createFolder("data");
+//create File
+createFile("data/post.json", "content here");
 
-//routing
-
+//Routing
 //home route
 app.get("/", (req, res) => {
   res.send("Home Route!");
@@ -11,7 +16,10 @@ app.get("/", (req, res) => {
 
 //fetch all posts
 app.get("/posts", (req, res) => {
-  res.send("Fetch all Posts Route!");
+  res.json({
+    message: "Posts Fetched Successfully!",
+    postsData,
+  });
 });
 //fetch single post
 app.get("/posts/:id", (req, res) => {
