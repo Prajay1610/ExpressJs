@@ -65,8 +65,39 @@ app.post("/posts", (req, res) => {
 
 //update a post
 app.put("/posts/:id", (req, res) => {
-  console.log(req.params);
-  res.send("Update Post Route");
+  //get dynamic id
+  const id = req.params.id;
+  const { url, title, desc } = req.body;
+
+  //find the popst to update
+  const foundPost = postsData.find(function (post) {
+    return post.id === id;
+  });
+  if (!foundPost) {
+    res.json({ message: "Post Not Found!" });
+  }
+
+  //filter out all posts with the post found
+  const filteredPosts = postsData.filter((post) => {
+    return post.id !== id;
+  });
+  //update the found post
+  foundPost.title = title;
+  foundPost.desc = desc;
+  foundPost.url = url;
+
+  //push the updated post into the filtered post array
+  filteredPosts.unshift(foundPost);
+
+  //write to the file
+
+  fs.writeFile("data/post.json", JSON.stringify(filteredPosts), (err) => {
+    if (err) {
+      console.log(err);
+    }
+    //send message to the user
+    res.json({ message: "Post updated Successfully" });
+  });
 });
 
 //Delete a Post
