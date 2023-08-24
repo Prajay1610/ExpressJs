@@ -6,10 +6,27 @@
     <title>Document</title>
   </head>
   <body>
-    <h1>Welcome</h1>
-    <form>
-      <label>Name</label>
-      <input type="text" name="name" />
-    </form>
+    <h1>Inject Data</h1>
+    <%=20+10%>
+    <h1>The Result is:<%=20+30%></h1>
+    <% console.log('From Ejs')%>
+
+    <h1>Looping</h1>
+    <% ['CSS','JS','Python','Java'].forEach((element) => { %>
+    <p><%=element%></p>
+    <%});%> %>
+
+    <!-------Conditions-->
+    <h1>Conditions</h1>
+    <%if(30<20){%>
+    <p>Yes It Is</p>
+    <%}else{%>
+    <p>No it is not</p>
+    <% }%>
   </body>
 </html>
+
+<!------Inject Data -->
+<!------Write js -->
+<!------Looping -->
+<!------make conditions -->
